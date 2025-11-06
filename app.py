@@ -3,7 +3,7 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
 
-app = Flask(__name__, template_folder="flask_mongo_crud_alumnos/templates")
+app = Flask(__name__)  # ← Elimina template_folder personalizado
 app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")
 
 MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://lopezmorenojosedanielcbtis272_db_user:admin123@cluster0.ajwpjn1.mongodb.net/escuela")
@@ -99,4 +99,4 @@ def delete_alumno(id):
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000, debug=False)  # ← Importante para Render

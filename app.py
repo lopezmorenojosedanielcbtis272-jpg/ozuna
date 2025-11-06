@@ -3,8 +3,8 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 import os
 
-app = Flask(__name__)  # ← Elimina template_folder personalizado
-app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret")
+app = Flask(__name__)
+app.secret_key = os.environ.get("FLASK_SECRET", "dev-secret-key-123")
 
 MONGO_URI = os.environ.get("MONGO_URI", "mongodb+srv://lopezmorenojosedanielcbtis272_db_user:admin123@cluster0.ajwpjn1.mongodb.net/escuela")
 client = MongoClient(MONGO_URI)
@@ -21,7 +21,7 @@ def to_str_list(cursor):
 
 @app.route("/")
 def index():
-    alumnos = to_str_list(db.alumnos.find().sort("apellido", 1))
+    alumnos = to_str_list(db.alumnos.find().sort("nombre", 1))
     return render_template("index.html", alumnos=alumnos)
 
 @app.route("/alumnos/new", methods=["GET", "POST"])
@@ -31,6 +31,7 @@ def create_alumno():
         edad = request.form.get("edad", "").strip()
         grupo = request.form.get("grupo", "").strip()
         promedio = request.form.get("promedio", "").strip()
+        
         try:
             promedio = float(promedio) if promedio else None
         except:
@@ -99,4 +100,5 @@ def delete_alumno(id):
     return redirect(url_for("index"))
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=10000, debug=False)  # ← Importante para Render
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port, debug=False)
